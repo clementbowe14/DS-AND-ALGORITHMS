@@ -7,7 +7,7 @@ public class App {
         graph.addEdge(2,3);
         graph.addEdge(3,4);
 
-        graph.DFSVisit();
+        graph.TopologicaSortDFS();
         System.out.println(graph.toString());
     }
 }
