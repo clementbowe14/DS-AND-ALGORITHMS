@@ -53,17 +53,17 @@ public class Graph{
      * Depth first search method that searches for visited nodes that haven't been 
      */
     public void DFSVisit(){
-        Set<Integer> visited = new HashSet<>();
+        boolean[] visited = new boolean[adj.size()];
         for(int i = 0; i < adj.size(); i++){
-            if(!visited.contains(i)){
+            if(!visited[i]){
                 DFS(visited, i);
             }
         }
         System.out.println();
     }
 
-    public void DFS(Set<Integer> visited, int V){
-        if(!visited.add(V)){
+    public void DFS(boolean []visited, int V){
+        if(visited[V]){
             return;
         } else{
             System.out.print(V + " -> ");
@@ -86,7 +86,7 @@ public class Graph{
            }
        }
        while(!stack.isEmpty()){
-           System.out.print(stack.pop());
+           System.out.print(stack.pop() + " ");
        }
        System.out.println();
    }
@@ -102,6 +102,28 @@ public class Graph{
        }
        stack.push(index);
    }
+
+   /**
+    * Given a directed acyclic graph dijkstra's algorithm will print the shortest path
+    * from point S to point V
+    * We're going to keep this simple 
+    */
+   public void Dijkstra(int S, int V){
+       if(adj.size() == 0){
+           return;
+       }
+       HashMap<Integer,Integer> map = new HashMap<>();
+       for(int i = 0; i < adj.size(); i++){
+           if(i != S)
+            map.put(i, Integer.MAX_VALUE);
+       }
+       // base condition
+       map.put(S, 0);
+       PriorityQueue<Integer> queue = new PriorityQueue<>();
+       queue.add(S);
+       
+   }
+
    
     /**
      * this will return the adjacency lists that exist in the graph
