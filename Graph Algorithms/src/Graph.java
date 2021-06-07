@@ -4,6 +4,7 @@ public class Graph{
 
     //list of adjacent nodes
     ArrayList<ArrayList<Integer>> adj;
+    int[][] weight;
     
     /**
      * Creates a graph with V vertices
@@ -15,9 +16,10 @@ public class Graph{
         for(int i = 0; i < V; i++){
             adj.add(new ArrayList<Integer>());
         }
+        weight = new int[V][V];
     }
 /**
- * adds a edge at vertic (u, v)
+ * adds a edge at vertices (u, v)
  * @param u 
  * @param v
  */
@@ -30,6 +32,23 @@ public class Graph{
         }
     }
 
+    /**
+     * Sets a weight for an edge (U,V) in a graph
+     * @param U @param V @param W
+     */
+    public void setWeight(int U, int V, int W){
+        weight[U][V] = W;
+    }
+
+    /**
+     * Returns the weight of an edge (U,V) in a graph
+     * @param U
+     * @param V
+     * @return
+     */
+    public int getWeight(int U, int V){
+        return weight[U][V];
+    }
     /**
      * Depth first search method that searches for visited nodes that haven't been 
      */
@@ -55,15 +74,33 @@ public class Graph{
     }
    
     /**
+     * assumes that there are no cycles in the graph
     * topologically sorts a graph using DFS
     */
    public void TopologicaSortDFS(){
-       Set<Integer> visited = new HashSet<>();
+      boolean[] visited = new boolean[adj.size()];
+      Stack<Integer> stack = new Stack<>();
        for(int i = 0; i < adj.size(); i++){
-           if(!visited.contains(i)){
-               TopSortUtil
+           if(!visited[i]){
+               TopSortUtil(visited, stack, i);
            }
        }
+       while(!stack.isEmpty()){
+           System.out.print(stack.pop());
+       }
+       System.out.println();
+   }
+
+   public void TopSortUtil(boolean[] visited, Stack<Integer> stack, int index){
+       if(visited[index]){
+           return; 
+       }
+       visited[index] = true;
+       List<Integer> lst = adj.get(index);
+       for(int i = 0; i < lst.size(); i++){
+           TopSortUtil(visited, stack, lst.get(i));
+       }
+       stack.push(index);
    }
    
     /**
