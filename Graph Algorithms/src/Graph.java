@@ -5,6 +5,7 @@ public class Graph{
     //list of adjacent nodes
     ArrayList<ArrayList<Integer>> adj;
     int[][] weight;
+    public int stronglyConnectedComponents = 0;
     
     /**
      * Creates a graph with V vertices
@@ -18,6 +19,8 @@ public class Graph{
         }
         weight = new int[V][V];
     }
+
+
 /**
  * adds a edge at vertices (u, v)
  * @param u 
@@ -49,6 +52,7 @@ public class Graph{
     public int getWeight(int U, int V){
         return weight[U][V];
     }
+
     /**
      * Depth first search method that searches for visited nodes that haven't been 
      */
@@ -70,6 +74,53 @@ public class Graph{
             for(int i = 0; i < adj.get(V).size(); i++){
                 DFS(visited, adj.get(V).get(i));
             }
+        }
+    }
+
+    /**
+     * Calculates the number of distinct SCC within a graph
+     */
+    public void tarjansAlgorithm() {
+        int size = adj.size();
+        Stack<Integer> stack = new Stack<>();
+        boolean[] onStack = new boolean[size];
+        boolean[] visited = new boolean[size];
+        int[] id = new int[size];
+        int [] lowlink = new int[size];
+
+        Arrays.fill(id, -1);
+
+        for(int i = 0; i < size; i++) {
+            if(!visited[i]){
+                tarjansAlgorithmHelper(i, stack, visited, lowlink, id, onStack, i); //where the magic happens
+            }
+        }
+    }
+
+    public void tarjansAlgorithmHelper(int index, Stack<Integer> stack, boolean[] visited, int[] lowlink, int[] id,boolean[] onStack, int idValue) 
+                                        {
+        lowlink[index] = id[index] = idValue;
+        stack.push(index);
+        onStack[index] = true;
+        visited[index] = true;
+        List<Integer> neighbors = adj.get(index);
+
+        for(int neighbor : neighbors){
+            if(!visited[neighbor])
+                tarjansAlgorithmHelper(neighbor, stack, visited, lowlink, id, onStack, id[index]+1);
+            if(onStack[neighbor])
+                lowlink[index] = Math.min(id[neighbor], id[index]);
+        }
+
+        if(id[index] == lowlink[index]){
+            while(true) {
+                int node = stack.pop();
+                onStack[node] = false;
+                if(node == index)
+                    break;
+            }
+            
+            stronglyConnectedComponents++;
         }
     }
    
@@ -106,7 +157,6 @@ public class Graph{
    /**
     * Given a directed acyclic graph dijkstra's algorithm will print the shortest path
     * from point S to point V
-    * We're going to keep this simple 
     */
    public void Dijkstra(int S, int V){
        if(adj.size() == 0){
@@ -121,7 +171,6 @@ public class Graph{
        map.put(S, 0);
        PriorityQueue<Integer> queue = new PriorityQueue<>();
        queue.add(S);
-       
    }
 
    
